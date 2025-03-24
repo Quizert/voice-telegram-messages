@@ -1,0 +1,29 @@
+services:
+  tts-server:
+    build:
+      context: .
+      dockerfile: python.Dockerfile
+    container_name: tts-server
+    ports:
+      - "50051:50051"  # gRPC порт
+    restart: unless-stopped
+    networks:
+      - mynetwork
+
+  telegram-bot:
+    build:
+      context: .
+      dockerfile: go.Dockerfile
+    container_name: telegram-bot
+    depends_on:
+      - tts-server  # Go не запустится, пока не стартует tts-server
+    restart: unless-stopped
+    networks:
+      - mynetwork
+    environment:
+      - GRPC_SERVER_HOST=tts-server
+      - GRPC_SERVER_PORT=50051
+
+networks:
+  mynetwork:
+    driver: bridge

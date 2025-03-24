@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package audio_processing.v1;
+
+option go_package = "kursach/proto;audio"; // Адаптировано под ваш модуль
+
+service AudioProcessor {
+  rpc ProcessContent(ContentRequest) returns (ProcessingResponse);
+}
+
+message ContentRequest {
+  string text = 1;
+  AudioFile audio = 2;
+}
+
+message AudioFile {
+  bytes data = 1;
+}
+
+message ProcessingResponse {
+  string status = 1;
+  AudioResult result = 2; // Используем AudioResult
+}
+
+message AudioResult {
+  bytes processed_audio = 1;
+}
