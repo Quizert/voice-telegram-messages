@@ -22,7 +22,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	bot.Handle(telebot.OnText, func(c telebot.Context) error {
+	bot.Handle(telebot.OnText, func( ) error {
 		modelPath := filepath.Join("voices", "1.wav")
 		if _, err := os.Stat(modelPath); os.IsNotExist(err) {
 			return c.Send("Сначала отправьте голосовое сообщение для создания модели!")

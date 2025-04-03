@@ -1,0 +1,9 @@
+numpy==1.22.0
+grpcio==1.71.0
+protobuf==5.29.4
+TTS==0.22.0
+soundfile==0.12.1
+librosa==0.10.2.post1
+numba==0.56.4
+llvmlite==0.39.1
+pypinyin==0.54.0

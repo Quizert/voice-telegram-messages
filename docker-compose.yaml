@@ -4,11 +4,20 @@ services:
       context: .
       dockerfile: python.Dockerfile
     container_name: tts-server
-    ports:
-      - "50051:50051"  # gRPC порт
     restart: unless-stopped
+    ports:
+      - "50051:50051"
     networks:
       - mynetwork
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [ gpu ]
+    # для docker-compose без swarm:
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
 
   telegram-bot:
     build:

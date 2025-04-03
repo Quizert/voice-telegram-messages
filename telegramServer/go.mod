@@ -1,8 +1,6 @@
 module kursach
 
-go 1.23.0 // Исправлена версия Go (1.23.3 не существует)
-
-toolchain go1.23.3
+go 1.23.3
 
 require (
 	google.golang.org/grpc v1.70.0
@@ -11,6 +9,7 @@ require (
 )
 
 require (
+	github.com/stretchr/testify v1.9.0 // indirect
 	golang.org/x/net v0.37.0 // indirect
 	golang.org/x/sys v0.31.0 // indirect
 	golang.org/x/text v0.23.0 // indirect
