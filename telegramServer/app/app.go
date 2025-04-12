@@ -5,41 +5,50 @@ import (
 	"gopkg.in/telebot.v3"
 	"kursach/client"
 	"kursach/config"
+	"kursach/handler"
 	"kursach/service"
+	"log"
 	"time"
 )
 
 type App struct {
 	Bot     *telebot.Bot
-	Service service.Service
+	Handler *handler.Handler
 }
 
-func Init() (*App, error) {
+func NewApp() *App {
+	return &App{}
+}
+
+func (a *App) Init() error {
+	log.Println("Init App")
 	cfg := config.LoadConfig()
 	bot, err := telebot.NewBot(telebot.Settings{
 		Token:  cfg.TelegramToken,
 		Poller: &telebot.LongPoller{Timeout: 10 * time.Second},
 	})
+	a.Bot = bot
 	if err != nil {
-		return nil, fmt.Errorf("ошибка инициализации бота: %w", err)
+		return fmt.Errorf("ошибка инициализации бота: %w", err)
 	}
 
 	audioClient, err := client.NewAudioProcessorClient(cfg.GRPCHost, cfg.GRPCPort)
 	if err != nil {
-		return nil, fmt.Errorf("ошибка в создании клиента: %w", err)
+		return fmt.Errorf("ошибка в создании клиента: %w", err)
 	}
 
 	svc := service.NewService(audioClient)
-	app := &App{
-		Bot:     bot,
-		Service: *svc,
-	}
-	return app, nil
+	controller := handler.NewHandler(svc)
+
+	a.Handler = controller
+	log.Println("Init success")
+	return nil
 }
 
-func (app *App) Start() {
-	app.Bot.Handle(telebot.OnText, app.handleText())
-	app.Bot.Handle(telebot.OnVoice, app.handleVoice())
-
-	app.Bot.Start()
+func (a *App) Start() {
+	log.Println("Start App")
+	a.Bot.Handle(telebot.OnText, a.Handler.SendAudio)
+	a.Bot.Handle(telebot.OnVoice, a.Handler.SaveAudio)
+	в
+	a.Bot.Start()
 }

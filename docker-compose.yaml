@@ -21,15 +21,16 @@ services:
 
   telegram-bot:
     build:
-      context: .
+      context: ./telegramServer
       dockerfile: go.Dockerfile
     container_name: telegram-bot
     depends_on:
-      - tts-server  # Go не запустится, пока не стартует tts-server
+      - tts-server
     restart: unless-stopped
     networks:
       - mynetwork
     environment:
+      - TELEGRAM_TOKEN=7791869623:AAHfmFPDKCoIvbRoHgO6_YKO32r_EtN1vTc
       - GRPC_SERVER_HOST=tts-server
       - GRPC_SERVER_PORT=50051
 

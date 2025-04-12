@@ -12,6 +12,11 @@ type Service struct {
 	audioProcessorClient AudioProcessorClient
 }
 
+func (s *Service) SaveModel() {
+	//TODO implement me
+	panic("implement me")
+}
+
 func NewService(client AudioProcessorClient) *Service {
 	return &Service{
 		audioProcessorClient: client,

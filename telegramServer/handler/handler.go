@@ -3,6 +3,7 @@ package handler
 import (
 	"gopkg.in/telebot.v3"
 	pb "kursach/proto"
+	"log"
 )
 
 type Service interface {
@@ -20,6 +21,11 @@ func NewHandler(service Service) *Handler {
 	}
 }
 
-func (h *Handler) SendAudio(c telebot.Context) {
+func (h *Handler) SendAudio(c telebot.Context) error {
+	log.Println("gg")
+	return nil
+}
 
+func (h *Handler) SaveAudio(c telebot.Context) error {
+	return nil
 }
