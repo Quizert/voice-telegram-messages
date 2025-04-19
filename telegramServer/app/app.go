@@ -48,7 +48,6 @@ func (a *App) Init() error {
 func (a *App) Start() {
 	log.Println("Start App")
 	a.Bot.Handle(telebot.OnText, a.Handler.SendAudio)
-	a.Bot.Handle(telebot.OnVoice, a.Handler.SaveAudio)
-	в
+	a.Bot.Handle(telebot.OnVoice, a.Handler.SaveModel)
 	a.Bot.Start()
 }

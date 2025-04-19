@@ -10,9 +10,10 @@ type AudioProcessorClient interface {
 
 type Service struct {
 	audioProcessorClient AudioProcessorClient
+	stateMachine         map[int64]string
 }
 
-func (s *Service) SaveModel() {
+func (s *Service) SaveModel(userID int64) error {
 	//TODO implement me
 	panic("implement me")
 }

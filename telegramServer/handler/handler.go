@@ -3,12 +3,11 @@ package handler
 import (
 	"gopkg.in/telebot.v3"
 	pb "kursach/proto"
-	"log"
 )
 
 type Service interface {
 	SendAudio(text string, audioData []byte) (*pb.ProcessingResponse, error)
-	SaveModel()
+	SaveModel(userID int64) error
 }
 
 type Handler struct {
@@ -21,11 +20,36 @@ func NewHandler(service Service) *Handler {
 	}
 }
 
+// SendAudio Тут парсинг
 func (h *Handler) SendAudio(c telebot.Context) error {
-	log.Println("gg")
+	git
+	text := c.Text()
+	h.service.SendAudio(text, modelBytes)
 	return nil
 }
 
-func (h *Handler) SaveAudio(c telebot.Context) error {
+func (h *Handler) SaveModel(c telebot.Context) error {
+	id := c.Sender().ID
+	err := h.service.SaveModel(id)
+	if err != nil {
+		return err
+	}
+
+	err = c.Send("Введите имя модели:")
+	if err != nil {
+		return err
+	}
+
+	//msg, err := c.Bot().
+	//if err != nil {
+	//	return c.Send("Время ожидания истекло.")
+	//}
+	//
+	//modelName := msg.Text
+
+	err = c.Send("Модель успешно сохранена")
+	if err != nil {
+		return err
+	}
 	return nil
 }
