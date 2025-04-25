@@ -17,6 +17,7 @@ RUN go build -o telegram_bot ./cmd
 
 # ---------- СТАДИЯ ЗАПУСКА ----------
 FROM alpine:latest
+RUN apk add --no-cache ffmpeg
 
 WORKDIR /app
 COPY --from=builder /app/telegram_bot .

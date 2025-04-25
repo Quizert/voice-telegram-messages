@@ -16,6 +16,18 @@ type App struct {
 	Handler *handler.Handler
 }
 
+func setCommands(b *telebot.Bot) {
+	commands := []telebot.Command{
+		{Text: "/save_audio", Description: "Отправить голосовое сообщения для генерации модели."},
+		{Text: "/start", Description: "Старт"},
+	}
+
+	err := b.SetCommands(commands)
+	if err != nil {
+		log.Println("Ошибка при установке команд:", err)
+	}
+}
+
 func NewApp() *App {
 	return &App{}
 }
@@ -36,7 +48,6 @@ func (a *App) Init() error {
 	if err != nil {
 		return fmt.Errorf("ошибка в создании клиента: %w", err)
 	}
-
 	svc := service.NewService(audioClient)
 	controller := handler.NewHandler(svc)
 
@@ -47,7 +58,12 @@ func (a *App) Init() error {
 
 func (a *App) Start() {
 	log.Println("Start App")
-	a.Bot.Handle(telebot.OnText, a.Handler.SendAudio)
-	a.Bot.Handle(telebot.OnVoice, a.Handler.SaveModel)
+	setCommands(a.Bot)
+
+	a.Bot.Handle("/save_audio", a.Handler.GetModelName)
+
+	a.Bot.Handle(telebot.OnText, a.Handler.HandleText)
+
+	a.Bot.Handle(telebot.OnVoice, a.Handler.HandleVoice)
 	a.Bot.Start()
 }
