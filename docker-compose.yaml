@@ -1,7 +1,9 @@
+version: '3.7'
+
 services:
   tts-server:
     build:
-      context: .
+      context: ./pythonServer
       dockerfile: python.Dockerfile
     container_name: tts-server
     restart: unless-stopped
@@ -14,7 +16,6 @@ services:
         reservations:
           devices:
             - capabilities: [ gpu ]
-    # для docker-compose без swarm:
     runtime: nvidia
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
@@ -26,6 +27,7 @@ services:
     container_name: telegram-bot
     depends_on:
       - tts-server
+      - postgres
     restart: unless-stopped
     networks:
       - mynetwork
@@ -35,7 +37,30 @@ services:
       - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
       - GRPC_SERVER_HOST=${GRPC_SERVER_HOST}
       - GRPC_SERVER_PORT=${GRPC_SERVER_PORT}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    restart: unless-stopped
+    networks:
+      - mynetwork
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
 networks:
   mynetwork:
     driver: bridge
+
+volumes:
+  postgres_data:
