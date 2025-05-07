@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package audio_processing.v1;
 
-option go_package = "kursach/proto;audio"; // Адаптировано под ваш модуль
+option go_package = "kursach/proto;audio";
 
 service AudioProcessor {
   rpc ProcessContent(ContentRequest) returns (ProcessingResponse);
@@ -19,7 +19,7 @@ message AudioFile {
 
 message ProcessingResponse {
   string status = 1;
-  AudioResult result = 2; // Используем AudioResult
+  AudioResult result = 2;
 }
 
 message AudioResult {

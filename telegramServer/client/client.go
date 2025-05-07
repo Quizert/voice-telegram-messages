@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	pb "kursach/proto" // Замени на свой путь
+	pb "kursach/proto"
 
 	"google.golang.org/grpc"
 )

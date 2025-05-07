@@ -30,7 +30,7 @@ type Service struct {
 	storage              Storage
 	log                  *zap.Logger
 	userStates           map[int64]string
-	pendingModels        map[int64]string
+	activeModels         map[int64]string
 }
 
 func NewService(client AudioProcessorClient, storage Storage, logger *zap.Logger) *Service {
@@ -39,7 +39,7 @@ func NewService(client AudioProcessorClient, storage Storage, logger *zap.Logger
 		storage:              storage,
 		log:                  logger,
 		userStates:           make(map[int64]string),
-		pendingModels:        make(map[int64]string),
+		activeModels:         make(map[int64]string),
 	}
 }
 
@@ -117,13 +117,13 @@ func (s *Service) SetUserState(userID int64, state string) error {
 }
 
 func (s *Service) SetPendingModel(userID int64, name string) error {
-	s.pendingModels[userID] = name
+	s.activeModels[userID] = name
 	s.log.Debug("Установка pending модели", zap.Int64("userID", userID), zap.String("modelName", name))
 	return nil
 }
 
 func (s *Service) GetModelName(userID int64) (string, error) {
-	modelName := s.pendingModels[userID]
+	modelName := s.activeModels[userID]
 	if modelName == "" {
 		s.log.Warn("Модель не найдена у пользователя", zap.Int64("userID", userID))
 		return "", fmt.Errorf("no model names: %w", defs.ErrNoModel{})
